@@ -2,8 +2,8 @@
 #include <pushbutton.h>
 #include <QTRSensors.h>
 #include <ZumoReflectanceSensorArray.h>
-// dette er endring test1
-// det var jo fett
+
+
 // tune these
 #define REVERSE_SPEED 400
 #define TURN_SPEED 400
@@ -20,8 +20,8 @@ unsigned int sensor_values[NUM_SENSORS];
 //These pins recieve input from Arduino-Helper
 #define leftPin 2
 #define middlePin 3
-#define rightPin 6
-#define spinPin 0
+#define rightPin 0
+#define spinPin 6
 boolean rightState;
 boolean leftState;
 boolean middleState;
@@ -41,9 +41,8 @@ void setup(){
   pinMode(spinPin, INPUT);
   
   //sensors.init();
-  button.waitForButton();
   
-  Serial.begin(9600);
+  button.waitForButton();
   sensors.init();
   
   delay(500);
@@ -95,12 +94,13 @@ void loop(){
   if (sensor_values[0] == 1000)
   {
   PLab_motors.turnRight(400,130);
-  PLab_motors.forward(400,10);
   }
   else if (sensor_values[5] == 1000)
   {
   PLab_motors.turnLeft(zumoSpeed,130);
-  PLab_motors.forward(400,10);
+  }
+  else if (sensor_values[1] > 900 && sensor_values[2] > 900 && sensor_values[3] > 900 && sensor_values[4] > 900){
+    PLab_motors.turnLeft(zumoSpeed, 120);
   }
 
 }
