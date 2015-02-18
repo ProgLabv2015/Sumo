@@ -3,7 +3,7 @@
 #include <QTRSensors.h>
 #include <ZumoReflectanceSensorArray.h>
 // dette er endring test1
-
+// det var jo fett
 // tune these
 #define REVERSE_SPEED 400
 #define TURN_SPEED 400
