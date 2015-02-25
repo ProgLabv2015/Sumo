@@ -17,7 +17,7 @@
 #define rightPin 10
 
 //Tweak this to change sensitivity of sensors. The number is threshold of sensors in cm
-#define MAX_DISTANCE 20
+#define MAX_DISTANCE 40
 
 
 NewPing sonar0(trigPin0,echoPin0,MAX_DISTANCE);
@@ -100,7 +100,7 @@ void loop(){
             
       } 
       
-      delay(20);
+      
       
       
 }
