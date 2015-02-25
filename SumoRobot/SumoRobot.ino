@@ -32,19 +32,19 @@ void setup(){
     
     //Click the button once to initialize IR-sensors.
     button.waitForButton();
-    sensors.init();
+    //sensors.init();
     
     
     //Waits a half second before starting to calibrate the IR-sensors
     delay(500);
     
     //Turns on the yellow LED to show that we are calibrating.
-    pinMode(13, OUTPUT);
-    digitalWrite(13, HIGH);
+    //pinMode(13, OUTPUT);
+    //digitalWrite(13, HIGH);
     
     
     //Calibrates for 10 seconds. 
-    unsigned long startTime = millis();
+    /*unsigned long startTime = millis();
     while(millis()-startTime < 5000){
         PLab_motors.turnRight(200,10);
         sensors.calibrate();
@@ -52,11 +52,16 @@ void setup(){
     digitalWrite(13,LOW); //Turns off the yellow LED.
     
     //Press the button again to start wrestling.
-    button.waitForButton();
+    button.waitForButton();*/
 }   
     
     
 void loop(){
+  
+  
+    rightState = 0;
+    leftState = 0;
+    middleState = 0;
     //Checks for input from the Arduino-helper
     rightState = digitalRead(rightPin);
     leftState = digitalRead(leftPin);
@@ -66,19 +71,27 @@ void loop(){
     //Checks for signals from the SumoHelper to determine what to do.
     //The sumo turns the way the enemy was last seen. Default is left.
     
-    if (middleState == HIGH){ //Drives forward 25 cm
-        PLab_motors.forward(zumoSpeed,10);
+    
+    
+    
+    
+    if (leftState == HIGH){ 
+        Serial.println("SNU VENSTRE!");
+        PLab_motors.turnLeft(200,20);  //Turn 20 degrees left, then drives forward 25 cm
+        //PLab_motors.forward(zumoSpeed,10);
     }
     
     else if (rightState == HIGH){ 
+        Serial.println("SNU HOYRE!");
         PLab_motors.turnRight(200,20); //Turn 20 degrees right, 
         //PLab_motors.forward(zumoSpeed,10); // then drives forward 1 cm
     }
     
-    else if (leftState == HIGH){ 
-        PLab_motors.turnLeft(200,20);  //Turn 20 degrees left, then drives forward 25 cm
-        //PLab_motors.forward(zumoSpeed,10);
+    else if (middleState == HIGH){ //Drives forward 25 cm
+        Serial.println("GAA FOROVER!");
+        PLab_motors.forward(zumoSpeed,2);
     }
+    delay(100);
 }
   
 void goForward(int cm){
