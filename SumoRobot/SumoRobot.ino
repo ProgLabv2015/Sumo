@@ -8,7 +8,7 @@
 unsigned int sensor_values[NUM_SENSORS];
 
 //These pins receive input from Arduino-Helper
-#define leftPin 2
+#define leftPin 1
 #define middlePin 3
 #define rightPin 0
 #define spinPin 6
@@ -22,7 +22,7 @@ Pushbutton button(ZUMO_BUTTON); //Activates the integrated button on the Sumo. U
 PLab_ZumoMotors PLab_motors;
 ZumoReflectanceSensorArray sensors;
 
-int zumoSpeed = 150; // Speed is 150 by default. This is not very much used in the code.
+int zumoSpeed = 400; // Speed is 150 by default. This is not very much used in the code.
 
 char lastSeenDirection = 'l';
 
@@ -49,8 +49,8 @@ void setup(){
     
     //Calibrates for 10 seconds. 
     unsigned long startTime = millis();
-    while(millis()-startTime < 10000){
-        PLab_motors.turnRight(200,20);
+    while(millis()-startTime < 5000){
+        PLab_motors.turnRight(200,10);
         sensors.calibrate();
     }
     digitalWrite(13,LOW); //Turns off the yellow LED.
@@ -72,28 +72,28 @@ void loop(){
     //The sumo turns the way the enemy was last seen. Default is left.
     if (turnState == HIGH){
         if(lastSeenDirection == 'r'){ //If the enemy was last seen on the right, turn right.
-            PLab_motors.turnRight(zumoSpeed,10); //Turns 10 degrees to the left.
+            PLab_motors.turnRight(200,10); //Turns 10 degrees to the left.
         }
         
         else{ //Else, turn left.
-            PLab_motors.turnLeft(zumoSpeed,10); //Turns 10 degrees to the left.
+            PLab_motors.turnLeft(200,10); //Turns 10 degrees to the left.
         }
     }
     
     else if (middleState == HIGH){ //Drives forward 25 cm
-        goForward(10);
+        PLab_motors.forward(zumoSpeed,10);
     }
     
     else if (rightState == HIGH){ 
         lastSeenDirection = 'r';
-        PLab_motors.turnRight(zumoSpeed,25); //Turn 25 degrees right, then drives forward 25 cm
-        goForward(10);
+        PLab_motors.turnRight(200,25); //Turn 25 degrees right, 
+        PLab_motors.forward(zumoSpeed,10); // then drives forward 1 cm
     }
     
     else if (leftState == HIGH){ 
         lastSeenDirection = 'l';
-        PLab_motors.turnLeft(zumoSpeed,25);  //Turn 25 degrees left, then drives forward 25 cm
-        goForward(10);
+        PLab_motors.turnLeft(200,25);  //Turn 25 degrees left, then drives forward 25 cm
+        PLab_motors.forward(zumoSpeed,10);
     }
 }
   
@@ -102,7 +102,7 @@ void goForward(int cm){
     for(int i = 0; i < cm; i++){
         PLab_motors.forward(200,1); //Moves forward at full speed.
         sensors.readCalibrated(sensor_values);
-        
+        //Kan hende vi må snu om all logikken her inne, pga hvit strek...
         if (sensor_values[0] == 1000) //Checks if there is a line on the left side. Burde verdien være 1000 her?
         {
             lastSeenDirection = 'r';
